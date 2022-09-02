@@ -14,18 +14,24 @@ const displayNews = (elements) => {
   elements.forEach((element) => {
     const elementDiv = document.createElement("div");
     elementDiv.innerHTML = `
-            <div class="row g-0 mb-3 bg-white rounded">
-                <div class="col-md-4">
+            <div class="row g-0 my-3 bg-white rounded">
+                <div class="col-md-3">
                 <img src="${element.thumbnail_url}" class="img-fluid rounded-start p-3">
                 </div>
-                <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">${element.title}</h5>
-                    <p class="card-text">${element.details}</p>
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    <br>
-                    <img src="${element.author.img}" class="w-25 rounded-pill">
-                </div>
+                <div class="col-md-9">
+                    <div class="card-body px-3">
+                        <h5 class="card-title my-2">${element.title}</h5>
+                        <p class="card-text mb-4">${element.details}</p>
+                        <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center">
+                                <img src="${element.author.img}" class="img-width rounded-pill">
+                                <p class="px-2 text-secondary">${element.author.name}</p>
+                            </div>
+                            <div class="px-5 text-secondary">
+                                <p>Views:${element.total_view}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 `;
