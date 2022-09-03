@@ -33,6 +33,9 @@ const loadNews = (id) => {
 const displayNews = (elements) => {
   const newsContainer = document.getElementById("news-container");
   newsContainer.innerHTML = ``;
+  elements.sort((a, b) => {
+    return b.total_view - a.total_view;
+  });
   elements.forEach((element) => {
     const elementDiv = document.createElement("div");
     if (element.total_view == "") {
