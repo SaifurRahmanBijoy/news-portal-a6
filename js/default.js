@@ -1,4 +1,3 @@
-
 // for fetching data and loading all categories by sequence
 const loadCategories = () => {
   const url = `https://openapi.programming-hero.com/api/news/categories`;
@@ -69,9 +68,10 @@ const displayNews = (elements) => {
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             </div>
 `;
-      newsContainer.appendChild(elementDiv);
+    newsContainer.appendChild(elementDiv);
   });
-    status(newsContainer.childElementCount)
+  status(newsContainer.childElementCount);
+  toggleSpinner(false);
 };
 
 //item status function
