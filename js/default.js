@@ -35,8 +35,13 @@ const displayNews = (elements) => {
   newsContainer.innerHTML = ``;
   elements.forEach((element) => {
     const elementDiv = document.createElement("div");
+    if (element.total_view == "") {
+      element.total_view = "Missing";
+    } else if (element.author.name == "") {
+      element.author.name = "Missing";
+    }
     elementDiv.innerHTML = `
-            <div class="row g-0 my-3 bg-white rounded">
+            <div data-bs-toggle="modal" data-bs-target="#newsModal" class="row g-0 my-3 bg-white rounded">
                 <div class="col-md-3">
                 <img src="${
                   element.thumbnail_url
@@ -65,7 +70,37 @@ const displayNews = (elements) => {
                     </div>
                 </div>
             </div>
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <!-- Modal -->
+            <div class="modal fade" id="newsModal" tabindex="-1" aria-labelledby="newsModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newsModalLabel">${
+                      element.title
+                    }</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="card-text mb-4">${element.details}</p>
+                    <div class="pb-2 d-flex align-items-center">
+                            <div class="d-flex align-items-center">
+                                <img src="${
+                                  element.author.img
+                                }" class="img-width rounded-pill">
+                                <p class="px-2 text-secondary">${
+                                  element.author.name
+                                }</p>
+                            </div>
+                            <div class="px-5 text-secondary">
+                                <p>Views:${element.total_view}</p>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+                </div>
+            </div>
             </div>
 `;
     newsContainer.appendChild(elementDiv);
