@@ -1,9 +1,26 @@
+// for fetching data and loading all categories by sequence
 const loadCategories = () => {
   const url = `https://openapi.programming-hero.com/api/news/categories`;
   fetch(url)
     .then((res) => res.json())
     .then((data) => displayCatogories(data.data.news_category));
 };
+
+// function for displaying Catogories
+const displayCatogories = (categories) => {
+  const categoriesContainer = document.getElementById("categories-container");
+  categories.forEach((category) => {
+    const categorydiv = document.createElement("div");
+    categorydiv.innerHTML = `
+                    <div>
+                        <button onClick="loadNews('${category.category_id}')","status('${category.category_name}')" class="btn text-primary">${category.category_name}</button>
+                    </div>
+        `;
+    categoriesContainer.appendChild(categorydiv);
+  });
+};
+
+// for fetching data and calling a function to display the news in that category
 const loadNews = (id) => {
   const url = `https://openapi.programming-hero.com/api/news/category/${id}`;
   fetch(url)
@@ -11,22 +28,10 @@ const loadNews = (id) => {
     .then((data) => displayNews(data.data));
 };
 
-const displayCatogories = (categories) => {
-  const categoriesContainer = document.getElementById("categories-container");
-  categories.forEach((category) => {
-    console.log(category.category_id);
-    const categorydiv = document.createElement("div");
-    categorydiv.innerHTML = `
-                    <div>
-                        <button class="btn text-primary">${category.category_name}</button>
-                    </div>
-        `;
-    categoriesContainer.appendChild(categorydiv);
-  });
-};
-
+//a function to display the news
 const displayNews = (elements) => {
   const newsContainer = document.getElementById("news-container");
+  newsContainer.innerHTML = ``;
   elements.forEach((element) => {
     const elementDiv = document.createElement("div");
     elementDiv.innerHTML = `
@@ -42,7 +47,7 @@ const displayNews = (elements) => {
                         <p class="card-text mb-4">${element.details.slice(
                           0,
                           350
-                        )} ....<span class="text-secondary">see more</span></p>
+                        )}.... </p>
                         <div class="pb-2 d-flex align-items-center">
                             <div class="d-flex align-items-center">
                                 <img src="${
@@ -59,10 +64,25 @@ const displayNews = (elements) => {
                     </div>
                 </div>
             </div>
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            </div>
 `;
     newsContainer.appendChild(elementDiv);
   });
 };
 
-// loadNews("08");
+//item status function
+function status(catName) {
+  const statusContainer = document.getElementById("status-container");
+    const newsCount = displayNews();
+    console.log(newsCount)
+  const status = document.createElement("p");
+  statusContainer.innerHTML = ``;
+  status.innerHTML = `
+      <p class="py-2 px-4 text-secondary bg-light rounded mt-3">${newsCount} items found in the category ${catName}</p>
+      `;
+  statusContainer.appendChild(status);
+}
+
 loadCategories();
+//status('${category.category_name}','${category.category_id.length}')
