@@ -1,9 +1,9 @@
 // for fetching data and loading all categories by sequence
-const loadCategories = () => {
+const loadCategories = async () => {
   const url = `https://openapi.programming-hero.com/api/news/categories`;
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => displayCatogories(data.data.news_category));
+  const res = await fetch(url);
+  const data = await res.json();
+  displayCatogories(data.data.news_category);
 };
 
 // function for displaying Catogories
@@ -21,12 +21,12 @@ const displayCatogories = (categories) => {
 };
 
 // for fetching data and calling a function to display the news in that category
-const loadNews = (id) => {
+const loadNews = async(id) => {
   toggleSpinner(true);
   const url = `https://openapi.programming-hero.com/api/news/category/${id}`;
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => displayNews(data.data));
+  const res = await fetch(url);
+  const data = await res.json();
+  displayNews(data.data);
 };
 
 //a function to display the news
