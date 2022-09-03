@@ -1,3 +1,4 @@
+
 // for fetching data and loading all categories by sequence
 const loadCategories = () => {
   const url = `https://openapi.programming-hero.com/api/news/categories`;
@@ -22,6 +23,7 @@ const displayCatogories = (categories) => {
 
 // for fetching data and calling a function to display the news in that category
 const loadNews = (id) => {
+  toggleSpinner(true);
   const url = `https://openapi.programming-hero.com/api/news/category/${id}`;
   fetch(url)
     .then((res) => res.json())
@@ -67,22 +69,30 @@ const displayNews = (elements) => {
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             </div>
 `;
-    newsContainer.appendChild(elementDiv);
+      newsContainer.appendChild(elementDiv);
   });
+    status(newsContainer.childElementCount)
 };
 
 //item status function
-function status(catName) {
+function status(newsCount) {
   const statusContainer = document.getElementById("status-container");
-    const newsCount = displayNews();
-    console.log(newsCount)
   const status = document.createElement("p");
   statusContainer.innerHTML = ``;
   status.innerHTML = `
-      <p class="py-2 px-4 text-secondary bg-light rounded mt-3">${newsCount} items found in the category ${catName}</p>
+      <p class="py-2 px-4 text-secondary bg-light rounded mt-3">${newsCount} items found</p>
       `;
   statusContainer.appendChild(status);
 }
+// spinner
+const toggleSpinner = (isLoading) => {
+  const loaderSection = document.getElementById("loader");
+  if (isLoading) {
+    loaderSection.classList.remove("d-none");
+  } else {
+    loaderSection.classList.add("d-none");
+  }
+};
 
 loadCategories();
 //status('${category.category_name}','${category.category_id.length}')
