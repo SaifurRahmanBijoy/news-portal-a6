@@ -38,11 +38,6 @@ const displayNews = (elements) => {
   });
   elements.forEach((element) => {
     const elementDiv = document.createElement("div");
-    if (element.total_view == "") {
-      element.total_view = "Missing Data";
-    } else if (element.author.name == "") {
-      element.author.name = "Missing Data";
-    }
     elementDiv.innerHTML = `
             <div onclick="(loadModal('${
               element._id
@@ -66,10 +61,16 @@ const displayNews = (elements) => {
                                 }" class="img-width rounded-pill">
                                 <p class="px-2 text-secondary">${
                                   element.author.name
+                                    ? element.author.name
+                                    : "No data found"
                                 }</p>
                             </div>
                             <div class="px-5 text-secondary">
-                                <p>Views:${element.total_view}</p>
+                                <p>Views:${
+                                  element.total_view
+                                    ? element.total_view
+                                    : "No data found"
+                                }</p>
                             </div>
                         </div>
                     </div>
@@ -90,7 +91,8 @@ const loadModal = async (id) => {
     const res = await fetch(url);
     const data = await res.json();
     const item = data.data[0];
-    const modalHeader = document.getElementById("newsModalLabel").textContent = item.title;
+    const modalHeader = (document.getElementById("newsModalLabel").textContent =
+      item.title);
     const modalBodyElement = document.getElementById("modal-body");
     modalBodyElement.innerHTML = `
     <img class="img-width rounded-pill" src="${item.author.img}" alt="">
