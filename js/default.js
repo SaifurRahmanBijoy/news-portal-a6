@@ -21,7 +21,7 @@ const displayCatogories = (categories) => {
 };
 
 // for fetching data and calling a function to display the news in that category
-const loadNews = async(id) => {
+const loadNews = async (id) => {
   toggleSpinner(true);
   const url = `https://openapi.programming-hero.com/api/news/category/${id}`;
   const res = await fetch(url);
@@ -39,12 +39,14 @@ const displayNews = (elements) => {
   elements.forEach((element) => {
     const elementDiv = document.createElement("div");
     if (element.total_view == "") {
-      element.total_view = "Missing";
+      element.total_view = "Missing Data";
     } else if (element.author.name == "") {
-      element.author.name = "Missing";
+      element.author.name = "Missing Data";
     }
     elementDiv.innerHTML = `
-            <div data-bs-toggle="modal" data-bs-target="#newsModal" class="row g-0 my-3 bg-white rounded">
+            <div onclick="(loadModal('${
+              element._id
+            }'))" data-bs-toggle="modal" data-bs-target="#newsModal" class="row g-0 my-3 bg-white rounded">
                 <div class="col-md-3">
                 <img src="${
                   element.thumbnail_url
@@ -73,43 +75,37 @@ const displayNews = (elements) => {
                     </div>
                 </div>
             </div>
-            <!-- Modal -->
-            <div class="modal fade" id="newsModal" tabindex="-1" aria-labelledby="newsModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="newsModalLabel">${
-                      element.title
-                    }</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="card-text mb-4">${element.details}</p>
-                    <div class="pb-2 d-flex align-items-center">
-                            <div class="d-flex align-items-center">
-                                <img src="${
-                                  element.author.img
-                                }" class="img-width rounded-pill">
-                                <p class="px-2 text-secondary">${
-                                  element.author.name
-                                }</p>
-                            </div>
-                            <div class="px-5 text-secondary">
-                                <p>Views:${element.total_view}</p>
-                            </div>
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-                </div>
-            </div>
-            </div>
+            
 `;
     newsContainer.appendChild(elementDiv);
   });
   status(newsContainer.childElementCount);
   toggleSpinner(false);
+};
+
+//modal
+const loadModal = async (id) => {
+  const url = `https://openapi.programming-hero.com/api/news/${id}`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    const item = data.data[0];
+    const modalHeader = document.getElementById("newsModalLabel").textContent = item.title;
+    const modalBodyElement = document.getElementById("modal-body");
+    modalBodyElement.innerHTML = `
+    <img class="img-width rounded-pill" src="${item.author.img}" alt="">
+    <h3 class="font-bold">${
+      item.author.name ? item.author.name : "No Data Found"
+    }</h3>
+    <h5>Published date: ${item.author.published_date}</h5>
+    <p>${item.details}</p>
+    <small>
+        Read Count: ${item.total_view ? item.total_view : "no data found"}
+    </small>
+    `;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 //item status function
@@ -122,6 +118,7 @@ function status(newsCount) {
       `;
   statusContainer.appendChild(status);
 }
+
 // spinner
 const toggleSpinner = (isLoading) => {
   const loaderSection = document.getElementById("loader");
